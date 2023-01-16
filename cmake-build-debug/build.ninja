@@ -51,7 +51,7 @@ build cmake_object_order_depends_target_microshell: phony || CMakeFiles/microshe
 
 build CMakeFiles/microshell.dir/main.c.obj: C_COMPILER__microshell_Debug C$:/Users/Bartosz/microshell/main.c || cmake_object_order_depends_target_microshell
   DEP_FILE = CMakeFiles\microshell.dir\main.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  FLAGS = -g -fdiagnostics-color=always -std=gnu99
   OBJECT_DIR = CMakeFiles\microshell.dir
   OBJECT_FILE_DIR = CMakeFiles\microshell.dir
   TARGET_COMPILE_PDB = CMakeFiles\microshell.dir\
