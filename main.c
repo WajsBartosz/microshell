@@ -4,7 +4,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
-void command(char *input, char *parameters[]){
+int command(char *input, char *parameters[]){
 	if(fgets(input, 1024, stdin) != NULL){
 		int length = strlen(input) - 1;
 		input[length] = 0;
@@ -16,7 +16,9 @@ void command(char *input, char *parameters[]){
 			wordCounter++;
 		}
 		parameters[wordCounter] = NULL;
+		return wordCounter;
 	}
+	return 0;
 }
 
 
@@ -29,7 +31,9 @@ void cd(char* parameter){
 	if(parameter[0] == '~'){
 		chdir(getenv("HOME"));
 	}else if(chdir(parameter) != 0){
-		perror("No such file or directory\n");
+		char error[1024];
+		sprintf(error, "-bash: cd: %s", parameter);
+		perror(error);
 	}
 }
 
@@ -37,12 +41,14 @@ int main(int argc, char *argv[]) {
     char path[1024];
     char input[1024];
     char* parameters[1024];
+	int size;
     while(1){
 	getcwd(path, sizeof(path));
 	printf("\033[1;31m");
 	printf("%s:%s$ ", getenv("USER"), path);
 	printf("\033[0m");
-	command(input, parameters);
+	size = command(input, parameters); 
+	if(size > 0){
 	if(strcmp("exit", parameters[0]) == 0){
 		exit(0);
 	}else if(strcmp("help", parameters[0]) == 0){
@@ -50,6 +56,8 @@ int main(int argc, char *argv[]) {
 	}else if(strcmp("cd", parameters[0]) == 0){
 		if(parameters[1] == NULL){
 			chdir(getenv("HOME"));
+		}else if(size > 2){
+			puts("-bash: cd: too many arguments");
 		}else{
 			cd(parameters[1]);
 		}
@@ -57,7 +65,7 @@ int main(int argc, char *argv[]) {
 		int pid = fork();
 		if(pid == 0){
 			if(execvp(parameters[0], parameters) == -1){
-				perror("Unknown command\n");
+				perror("Error");
 			}else{
 				exit(0);
 			}
@@ -65,10 +73,7 @@ int main(int argc, char *argv[]) {
 			wait(NULL);
 		}
 	}
-
-
-		
-		
-    }
+	}
+	}
     return 0;
 }
