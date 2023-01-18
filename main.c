@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 			char * name = parameters[i];
 			fPtr = fopen(name, "w");
 			if(fPtr == NULL){
-				printf("Unable to create file");
+				printf("Unable to create file\n");
 			}else{
 				fclose(fPtr);
 		}
@@ -85,7 +85,8 @@ int main(int argc, char *argv[]) {
 		int pid = fork();
 		if(pid == 0){
 			if(execvp(parameters[0], parameters) == -1){
-				perror("Error");
+				puts("Unknown command");
+				exit(1);
 			}else{
 				exit(0);
 			}
