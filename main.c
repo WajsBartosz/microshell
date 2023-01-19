@@ -5,36 +5,36 @@
 #include <dirent.h>
 #include <sys/wait.h>
 
-void saveToHistory(char input[]){
-  char *homePath = getenv("HOME");
-  if(homePath == NULL){
+void saveToHistory(char input[]) {
+  char * homePath = getenv("HOME");
+  if (homePath == NULL) {
     puts("Unable to get home directory");
-  }else{
+  } else {
     char historyPath[1024];
     snprintf(historyPath, sizeof(historyPath), "%s/history.txt", homePath);
-    FILE *history = fopen(historyPath, "a+");
-    if(history == NULL){
+    FILE * history = fopen(historyPath, "a+");
+    if (history == NULL) {
       puts("Unable to open history text file");
-    }else{
-      fprintf(history, "%s",input);
+    } else {
+      fprintf(history, "%s", input);
       fclose(history);
     }
   }
 }
 
-void history(){
-  char *homePath = getenv("HOME");
-  if(homePath == NULL){
+void history() {
+  char * homePath = getenv("HOME");
+  if (homePath == NULL) {
     puts("Unable to get home directory");
-  }else{
+  } else {
     char historyPath[1024];
     snprintf(historyPath, sizeof(historyPath), "%s/history.txt", homePath);
-    FILE *history = fopen(historyPath, "r");
-    if(history == NULL){
+    FILE * history = fopen(historyPath, "r");
+    if (history == NULL) {
       puts("Unable to open history text file");
-    }else{
+    } else {
       char line = fgetc(history);
-      while(line != EOF){
+      while (line != EOF) {
         printf("%c", line);
         line = fgetc(history);
       }
@@ -67,7 +67,7 @@ void help() {
   printf("Other commands are implemented using ");
 }
 
-void cd(int size, char *parameters[]){
+void cd(int size, char * parameters[]) {
   if (parameters[1] == NULL || strcmp("~", parameters[1]) == 0) {
     chdir(getenv("HOME"));
   } else if (size > 2) {
@@ -79,60 +79,60 @@ void cd(int size, char *parameters[]){
   }
 }
 
-void ls(int size, char *parameters[]){
-	DIR *openDirectory;
-  struct dirent *entry;
+void ls(int size, char * parameters[]) {
+  DIR * openDirectory;
+  struct dirent * entry;
   char path[1024] = "";
   char isASet = 0;
   int IndexA = 1;
-  for(int i = 1; i < size; i++){
-    if(strcmp("-a", parameters[i]) == 0){
+  for (int i = 1; i < size; i++) {
+    if (strcmp("-a", parameters[i]) == 0) {
       isASet = 1;
       break;
-    }else{
+    } else {
       IndexA++;
     }
   }
-  if(size == 1 || (size == 2 && isASet == 1)){
+  if (size == 1 || (size == 2 && isASet == 1)) {
     getcwd(path, sizeof(path));
-  } else if(size == 2 && isASet == 0){
+  } else if (size == 2 && isASet == 0) {
     strcpy(path, parameters[1]);
-  }else if(size == 3 && isASet == 1){
-    strcpy(path, parameters[3-IndexA]);
-  }else{
+  } else if (size == 3 && isASet == 1) {
+    strcpy(path, parameters[3 - IndexA]);
+  } else {
     puts("Too many arguments");
     return;
   }
   openDirectory = opendir(path);
-	if(openDirectory == NULL){
-		puts("Unable to find directory");
-	}else{
-		while((entry = readdir(openDirectory)) != NULL){
-      if(isASet == 1){
-        printf("%s   ", entry->d_name);
-      }else{
-        if(entry->d_name[0] != '.'){
-          printf("%s   ", entry->d_name);
+  if (openDirectory == NULL) {
+    puts("Unable to find directory");
+  } else {
+    while ((entry = readdir(openDirectory)) != NULL) {
+      if (isASet == 1) {
+        printf("%s   ", entry -> d_name);
+      } else {
+        if (entry -> d_name[0] != '.') {
+          printf("%s   ", entry -> d_name);
         }
       }
-		}
-		printf("\n");
-		closedir(openDirectory);
-	}
+    }
+    printf("\n");
+    closedir(openDirectory);
+  }
 }
 
-void touch(int size, char *parameters[]){
+void touch(int size, char * parameters[]) {
   FILE * fPtr;
-    for (int i = 1; i < size; i++) {
-      char name[1024];
-      strcpy(name, parameters[i]);
-      fPtr = fopen(name, "w");
-      if (fPtr == NULL) {
-        printf("Unable to create file");
-      } else {
-        fclose(fPtr);
-      }
+  for (int i = 1; i < size; i++) {
+    char name[1024];
+    strcpy(name, parameters[i]);
+    fPtr = fopen(name, "w");
+    if (fPtr == NULL) {
+      printf("Unable to create file");
+    } else {
+      fclose(fPtr);
     }
+  }
 }
 
 int main(int argc, char * argv[]) {
