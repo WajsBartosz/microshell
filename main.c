@@ -28,7 +28,7 @@ void history() {
     puts("Unable to get home directory");
   } else {
     char historyPath[1024];
-    snprintf(historyPath, sizeof(historyPath), "%s/history.txt", homePath);
+    snprintf(historyPath, sizeof(historyPath), "%s/.history.txt", homePath);
     FILE * history = fopen(historyPath, "r");
     if (history == NULL) {
       puts("Unable to open history text file");
@@ -62,9 +62,9 @@ int command(char * input, char * parameters[]) {
 }
 
 void help() {
-  printf("Microshell\nCreated by Wajs Bartosz\nMicroshell it's a small project for Operating systems");
+  printf("Microshell\nCreated by Wajs Bartosz\nMicroshell it's a small project for Operating systems on AMU university\n");
   printf("Own implementation of commands:\ncd, help, exit, ls and touch\n");
-  printf("Other commands are implemented using fork and execvp functions.");
+  printf("Other commands are implemented using fork and execvp functions.\n");
 }
 
 void cd(int size, char * parameters[]) {
